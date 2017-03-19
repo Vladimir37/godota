@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Favicon
-app.use(favicon('./app/client/source/img/favicon.ico'));
+app.use(favicon(__dirname + '/client/source/img/favicon.ico'));
 
 // Static files
 app.use('/src', express.static(__dirname + '/client/source'));

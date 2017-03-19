@@ -5,11 +5,15 @@ block title
 
 block content
     h2 Создать новость
-    form(action="/news/add" method="POST")
+    form(action="/news/add" method="POST" enctype="multipart/form-data")
         input(type="text" name="title" placeholder="Название" required).form-control
         br
         textarea(name="cover" placeholder="Краткое описание").form-control.news-cover
         br
         textarea(name="text" placeholder="Полный текст").form-control.news-text
+        br
+        input(type="text" name="tags" placeholder="Теги через пробел" required).form-control
+        br
+        input(type="file" name="main_image" placeholder="Изображение" required).form-control
         br
         button.btn.btn-primary Создать
