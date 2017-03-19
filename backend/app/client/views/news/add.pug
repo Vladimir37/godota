@@ -13,7 +13,11 @@ block content
         textarea(name="text" placeholder="Полный текст").form-control.news-text
         br
         input(type="text" name="tags" placeholder="Теги через пробел" required).form-control
-        br
-        input(type="file" name="main_image" placeholder="Изображение" required).form-control
-        br
+        h2 Главное изображение
+        input(type="file" name="main_image" placeholder="Изображение").form-control
+        h2 Галерея
+        div.gallery
+            input(type="file" data-num="0" name="gallery_0").form-control.gal_pic
+        br        
         button.btn.btn-primary Создать
+        script(src='/src/js/gallery.js')

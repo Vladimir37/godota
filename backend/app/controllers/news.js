@@ -9,10 +9,12 @@ var Models = require('../models/main');
 class NewsController {
     constructor() {
         this.imagePath = '/app/client/source/img/main_images/';
+        this.galleryPath = '/app/client/source/img/gallery/';
         this.appDir = path.dirname(require.main.filename);
 
         this.addAction = this.addAction.bind(this);
         this.fileProcessing = this.fileProcessing.bind(this);
+        this.galleryProcessing = this.galleryProcessing.bind(this);
     }
 
     index(req, res, next) {
@@ -52,15 +54,25 @@ class NewsController {
         });
 
         form.parse(req, (err, fields, files) => {
-            this.fileProcessing(files.main_image).then(function (name) {
+            var galleryExist = false;
+            var mainFileName = null;
+            this.fileProcessing(files.main_image).then((name) => {
+                mainFileName = name;
+                if (files.gallery_0) {
+                    galleryExist = true;
+                    return this.galleryProcessing(files);
+                } else {
+                    return []
+                }
+            }).then((gallery_list) => {
                 return Models.news.create({
                     title: fields.title,
                     cover: fields.cover,
                     text: fields.text,
                     tags: fields.tags.split(' '),
-                    mainImage: name,
-                    // galleryExist: Boolean,
-                    // galleryList: Array,
+                    mainImage: mainFileName,
+                    galleryExist: galleryExist,
+                    galleryList: gallery_list,
                     date: new Date()
                 });
             }).then(() => {
@@ -121,15 +133,48 @@ class NewsController {
             }
 
             var newFileName = ((new Date()).getTime() / 1000).toFixed(0) + '.' + fileNameArr[1];
-            console.log(file.path);
 
             fs.rename(file.path, this.appDir + this.imagePath + newFileName, function(err) {
                 if (err) {
                     reject(err);
                 }
             });
-            resolve(file.name + '.' + fileNameArr[1]);
+            resolve(newFileName);
         });        
+    }
+
+    galleryProcessing(files) {
+        var filesArr = [];
+        for (var filename in files) {
+            if (filename.slice(0, 8) == 'gallery_') {
+                filesArr.push(files[filename]);
+            }
+        };
+
+        var currentNum = 0;
+
+        var filesArr = filesArr.map((file) => {
+            return new Promise((resolve, reject) => {
+                var fileNameArr = file.type.split('/');
+
+                if (fileNameArr[0] != 'image') {
+                    fs.unlink(file.path);
+                    resolve('');
+                }
+
+                var newFileName = (((new Date()).getTime() / 1000).toFixed(0) + '_' + currentNum) + '.' + fileNameArr[1];
+                currentNum++;
+
+                fs.rename(file.path, this.appDir + this.galleryPath + newFileName, function(err) {
+                    if (err) {
+                        reject(err);
+                    }
+                });
+                resolve(newFileName);
+            });
+        });
+
+        return Promise.all(filesArr);
     }
 }
 
