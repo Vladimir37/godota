@@ -166,11 +166,56 @@ class NewsController {
     }
 
     deleteGalleryImage(req, res, next) {
-        //
+        var num = req.params.num;
+        var img = req.params.img;
+        Models.news.findOne({
+            _id: num
+        }).then((target_news) => {
+            if (target_news.galleryList.indexOf(img) == -1) {
+                throw "Image not found";
+            }
+            fs.unlink(this.appDir + this.galleryPath + img);
+            target_news.galleryList.splice(target_news.galleryList.indexOf(img), 1);
+            if (!target_news.galleryList.length) {
+                target_news.galleryExist = false;
+            }
+            return target_news.save();
+        }).then(() => {
+            res.redirect('/news/edit/' + req.params.num);
+        }).catch((err) => {
+            console.log(err);
+            res.redirect('/news/?err=500');
+        });
     }
 
     addGalleryImage(req, res, next) {
-        //
+        var num = req.params.num;
+        var form = new formidable.IncomingForm({
+            encoding: 'utf-8',
+            uploadDir: this.appDir + '/tmp',
+            multiples: true 
+        });
+
+        form.parse(req, (err, fields, files) => {
+            var newName = '';
+            this.galleryProcessing(files).then((names) => {
+                newName = names[0];
+                return Models.news.findOne({
+                    _id: num
+                });
+            }).then((target_news) => {
+                target_news.galleryList.push(newName);
+                if (target_news.galleryList.length == 1) {
+                    target_news.galleryExist = true;
+                }
+                return target_news.save();
+            }).then(() => {
+                res.redirect('/news/edit/' + req.params.num);
+            }).catch((err) => {
+                console.log(err);
+                res.redirect('/news/?err=500');
+            });
+        });
     }
 
     // Utility 

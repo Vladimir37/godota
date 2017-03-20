@@ -41,6 +41,6 @@ block content
                 button.btn.btn-warning Удалить это изображение из галлереи
     br
     form(action="/news/gallery_add/" + news._id method="POST" enctype="multipart/form-data")
-        input(type="file" name="image" required).form-control
+        input(type="file" name="gallery_0" required).form-control
         br
         button.btn.btn-primary Добавить изображение в галерею
