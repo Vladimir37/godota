@@ -28,8 +28,9 @@ block content
         br
         button.btn.btn-primary Изменить изображение
     form(action="/news/main_image_delete/" + news._id method="POST")
-        br
-        button.btn.btn-warning Удалить главное изображение
+        - if (news.mainImage)
+            br
+            button.btn.btn-warning Удалить главное изображение
         hr
     - if (!news.galleryExist)
         h3 Галлерея отсутствует

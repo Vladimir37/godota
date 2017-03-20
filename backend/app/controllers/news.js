@@ -14,8 +14,10 @@ class NewsController {
 
         this.addAction = this.addAction.bind(this);
         this.changeMainImage = this.changeMainImage.bind(this);
+        this.deleteMainImage = this.deleteMainImage.bind(this);
         this.addGalleryImage = this.addGalleryImage.bind(this);
-        
+        this.deleteGalleryImage = this.deleteGalleryImage.bind(this);
+
         this.fileProcessing = this.fileProcessing.bind(this);
         this.galleryProcessing = this.galleryProcessing.bind(this);
     }
@@ -109,9 +111,8 @@ class NewsController {
     }
 
     deleteAction(req, res, next) {
-        var num = req.params.num;
         Models.news.findOneAndRemove({
-            _id: num
+            _id: req.params.num
         }).then(() => {
             res.redirect('/news/');
         }).catch((err) => {
@@ -120,11 +121,48 @@ class NewsController {
     }
 
     deleteMainImage(req, res, next) {
-        //
+        Models.news.findOne({
+            _id: req.params.num
+        }).then((target_news) => {
+            fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+            target_news.mainImage = null;
+            return target_news.save();
+        }).then(() => {
+            res.redirect('/news/edit/' + req.params.num);
+        }).catch((err) => {
+            console.log(err);
+            res.redirect('/news/?err=500');
+        });
     }
 
     changeMainImage(req, res, next) {
-        //
+        var num = req.params.num;
+        var form = new formidable.IncomingForm({
+            encoding: 'utf-8',
+            uploadDir: this.appDir + '/tmp',
+            multiples: true 
+        });
+
+        form.parse(req, (err, fields, files) => {
+            var mainFileName = null;
+            this.fileProcessing(files.image).then((name) => {
+                mainFileName = name;
+                return Models.news.findOne({
+                    _id: num
+                });
+            }).then((target_news) => {
+                if (target_news.mainImage) {
+                    fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+                }
+                target_news.mainImage = mainFileName;
+                return target_news.save();
+            }).then(() => {
+                res.redirect('/news/edit/' + num);
+            }).catch((err) => {
+                console.log(err);
+                res.redirect('/news/?err=500');
+            });
+        });
     }
 
     deleteGalleryImage(req, res, next) {
