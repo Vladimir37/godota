@@ -54,24 +54,23 @@ class NewsController {
         });
 
         form.parse(req, (err, fields, files) => {
-            var galleryExist = false;
             var mainFileName = null;
             this.fileProcessing(files.main_image).then((name) => {
                 mainFileName = name;
                 if (files.gallery_0) {
-                    galleryExist = true;
                     return this.galleryProcessing(files);
                 } else {
                     return []
                 }
             }).then((gallery_list) => {
+                gallery_list = gallery_list.filter(n => n);
+
                 return Models.news.create({
                     title: fields.title,
-                    cover: fields.cover,
                     text: fields.text,
                     tags: fields.tags.split(' '),
                     mainImage: mainFileName,
-                    galleryExist: galleryExist,
+                    galleryExist: gallery_list.length > 0,
                     galleryList: gallery_list,
                     date: new Date()
                 });
@@ -121,7 +120,7 @@ class NewsController {
 
     fileProcessing(file) {
         return new Promise ((resolve, reject) => {
-            if (!file) {
+            if (!file.size) {
                 resolve(null);
             }
 

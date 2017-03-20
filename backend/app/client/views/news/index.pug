@@ -19,7 +19,8 @@ block content
             each item in news
                 .col-sm-6.col-md-4
                     .thumbnail
-                        img(src='/src/img/main_images/' + item.mainImage, alt='news_cover')
+                        - if (item.mainImage)
+                            img(src='/src/img/main_images/' + item.mainImage, alt='news_cover')
                         .caption
                             h3=item.title
                             p.news-base=item.cover

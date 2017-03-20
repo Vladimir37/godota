@@ -10,8 +10,6 @@ block content
     form(action="/news/edit/" + news._id method="POST")
         input(type="text" name="title" placeholder="Название" value=news.title required).form-control
         br
-        textarea(name="cover" placeholder="Краткое описание").form-control.news-cover=news.cover
-        br
         textarea(name="text" placeholder="Полный текст").form-control.news-text=news.text
         br
         input(type="text" name="date" placeholder="Дата" value=news.date required).form-control
