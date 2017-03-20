@@ -14,4 +14,32 @@ block content
         br
         input(type="text" name="date" placeholder="Дата" value=news.date required).form-control
         br
+        input(type="text" name="tags" placeholder="Теги" value=news.tags.join(' ') required).form-control
+        br
         button.btn.btn-primary Изменить
+
+    form(action="/news/main_image_edit/" + news._id method="POST" enctype="multipart/form-data")
+        - if (news.mainImage)
+            img(src='/src/img/main_images/' + news.mainImage, alt='news_cover').edit-img
+        - else 
+            h3 Титульное изображение отсутствует
+        br
+        input(type="file" name="image" required).form-control
+        br
+        button.btn.btn-primary Изменить изображение
+    form(action="/news/main_image_delete/" + news._id method="POST")
+        br
+        button.btn.btn-warning Удалить главное изображение
+        hr
+    - if (!news.galleryExist)
+        h3 Галлерея отсутствует
+    - else 
+        each item in news.galleryList
+            form(action="/news/gallery_delete/" + news._id + "/" + item method="POST")
+                img(src='/src/img/gallery/' + item, alt='news_cover').edit-img
+                button.btn.btn-warning Удалить это изображение из галлереи
+    br
+    form(action="/news/gallery_add/" + news._id method="POST" enctype="multipart/form-data")
+        input(type="file" name="image" required).form-control
+        br
+        button.btn.btn-primary Добавить изображение в галерею

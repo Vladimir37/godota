@@ -13,6 +13,9 @@ class NewsController {
         this.appDir = path.dirname(require.main.filename);
 
         this.addAction = this.addAction.bind(this);
+        this.changeMainImage = this.changeMainImage.bind(this);
+        this.addGalleryImage = this.addGalleryImage.bind(this);
+        
         this.fileProcessing = this.fileProcessing.bind(this);
         this.galleryProcessing = this.galleryProcessing.bind(this);
     }
@@ -68,7 +71,7 @@ class NewsController {
                 return Models.news.create({
                     title: fields.title,
                     text: fields.text,
-                    tags: fields.tags.split(' '),
+                    tags: fields.tags.split(' ').filter(n => n),
                     mainImage: mainFileName,
                     galleryExist: gallery_list.length > 0,
                     galleryList: gallery_list,
@@ -95,8 +98,8 @@ class NewsController {
             _id: num
         }, {
             title: req.body.title,
-            cover: req.body.cover,
             text: req.body.text,
+            tags: req.body.tags.split(' ').filter(n => n),
             date: date
         }).then(() => {
             res.redirect('/news/');
@@ -114,6 +117,22 @@ class NewsController {
         }).catch((err) => {
             res.redirect('/news/?err=500');
         });
+    }
+
+    deleteMainImage(req, res, next) {
+        //
+    }
+
+    changeMainImage(req, res, next) {
+        //
+    }
+
+    deleteGalleryImage(req, res, next) {
+        //
+    }
+
+    addGalleryImage(req, res, next) {
+        //
     }
 
     // Utility 

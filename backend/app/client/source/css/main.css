@@ -52,6 +52,11 @@ textarea.news-text {
     display: none;
 }
 
+.edit-img {
+    max-width: 250px;
+    max-height: 250px;
+}
+
 .hidden_row {
     display: none;
 }
