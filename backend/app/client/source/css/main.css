@@ -60,3 +60,8 @@ textarea.news-text {
 .hidden_row {
     display: none;
 }
+
+.symbol {
+    max-width: 30px;
+    max-height: 30px;
+}

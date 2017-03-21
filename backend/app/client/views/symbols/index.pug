@@ -1,0 +1,44 @@
+extends ../layout/app
+
+block title
+    | Символы
+
+block content
+    h2 Список символов
+    - if (err)
+        - if (err == 500)
+            p.text-danger Ошибка сервера
+        - else if (err == 404) 
+            p.text-danger Символ не найдена
+        - else if (err == 417) 
+            p.text-danger Символ с таким именем уже существует
+    table.table.table-stripped.table-bordered.table-hover
+        each item in symbols
+            tr
+                td=item.name
+                td
+                    img(src="/src/img/symbols/"+item.file alt=item.name).symbol
+                td
+                    form(action="/symbols/edit_image/"+item._id method="POST" enctype="multipart/form-data")
+                        input(type="file" name="image" required)
+                        br
+                        button.btn.btn-primary Заменить символ
+                td
+                    form(action="/symbols/edit_name/"+item._id method="POST")
+                        input(type="text" name="name" placeholder="Новое имя" required).form-control
+                        br
+                        button.btn.btn-primary Изменить имя
+                td 
+                    form(action="/symbols/delete/"+item._id method="POST")
+                        button.btn.btn-warning Удалить
+        tr
+            form(action="/symbols/add/" method="POST" enctype="multipart/form-data")
+                tr
+                    td
+                        input(type="text" name="name" placeholder="Имя" required).form-control
+                    td
+                        input(type="file" name="file" required)
+                    td
+                        button.btn.btn-primary Создать символ
+                    td
+                    td

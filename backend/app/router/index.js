@@ -7,6 +7,7 @@ var api = require('./api');
 var news = require('./news');
 var twitch = require('./twitch');
 var youtube = require('./youtube');
+var symbols = require('./symbols');
 
 var router = express.Router();
 
@@ -19,5 +20,6 @@ router.use('/api', api);
 router.use('/news', middlewares.check, news);
 router.use('/twitch', middlewares.check, twitch);
 router.use('/youtube', middlewares.check, youtube);
+router.use('/symbols', middlewares.check, symbols);
 
 module.exports = router;

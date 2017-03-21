@@ -6,6 +6,7 @@ var twitch = require('./twitch');
 var youtube = require('./youtube');
 var admin = require('./admin');
 var news = require('./news');
+var symbols = require('./symbols');
 
 var connection = mongoose.connection;
 
@@ -25,7 +26,8 @@ var models = {
     twitch,
     youtube,
     admin,
-    news
+    news,
+    symbols
 };
 
 module.exports = models;
