@@ -3,6 +3,20 @@ extends ../layout/app
 block title
     | Редактировать новость
 
+block modal
+    #symbolsModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4#myModalLabel.modal-title Символы
+                .modal-body
+                    each item in symbols
+                        img(src="/src/img/symbols/" + item.file alt=item.name).symbol.symbol_add
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+
 block content
     h2 Редактировать новость
     - if (err == 417) 
@@ -10,11 +24,16 @@ block content
     form(action="/news/edit/" + news._id method="POST")
         input(type="text" name="title" placeholder="Название" value=news.title required).form-control
         br
-        textarea(name="text" placeholder="Полный текст").form-control.news-text=news.text
+        textarea(name="text" placeholder="Полный текст").form-control.news-text#news-text=news.text
+        button.btn.btn-primary.btn-xs#divider Разделитель
+        button.btn.btn-primary.btn-xs#symbols Символы
         br
         input(type="text" name="date" placeholder="Дата" value=news.date required).form-control
         br
-        input(type="text" name="tags" placeholder="Теги" value=news.tags.join(' ') required).form-control
+        - var tags = ''
+        - if (news.tags) 
+            - tags = news.tags.join(' ')
+        input(type="text" name="tags" placeholder="Теги" value=tags required).form-control
         br
         button.btn.btn-primary Изменить
 
@@ -44,3 +63,5 @@ block content
         input(type="file" name="gallery_0" required).form-control
         br
         button.btn.btn-primary Добавить изображение в галерею
+    // Scripts
+    script(src='/src/js/editor.js')

@@ -65,3 +65,9 @@ textarea.news-text {
     max-width: 30px;
     max-height: 30px;
 }
+
+.symbol_add {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}

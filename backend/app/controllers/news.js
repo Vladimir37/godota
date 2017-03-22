@@ -35,14 +35,21 @@ class NewsController {
     }
 
     addPage(req, res, next) {
-        res.render('news/add');
+        Models.symbols.find().then((symbols) => {
+            res.render('news/add', {symbols});
+        })
     }
 
     editPage(req, res, next) {
         var num = req.params.num;
-        Models.news.findById(num).then((news) => {
+        var requests = [];
+        requests.push(Models.news.findById(num));
+        requests.push(Models.symbols.find());
+
+        Promise.all(requests).then((data) => {
             res.render('news/edit', {
-                news,
+                news: data[0],
+                symbols: data[1],
                 err: req.query.err
             });
         }).catch(() => {
