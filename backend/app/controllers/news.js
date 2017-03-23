@@ -79,7 +79,7 @@ class NewsController {
 
                 return Models.news.create({
                     title: fields.title,
-                    text: fields.text,
+                    body: fields.text,
                     tags: fields.tags.split(' ').filter(n => n),
                     mainImage: mainFileName,
                     galleryExist: gallery_list.length > 0,
@@ -107,7 +107,7 @@ class NewsController {
             _id: num
         }, {
             title: req.body.title,
-            text: req.body.text,
+            body: req.body.text,
             tags: req.body.tags.split(' ').filter(n => n),
             date: date
         }).then(() => {

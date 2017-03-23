@@ -8,6 +8,8 @@ class ApiController {
         this.getAllYoutube = this.getAllYoutube.bind(this);
         this.getAllTwitch = this.getAllTwitch.bind(this);
         this.getAllSymbols = this.getAllSymbols.bind(this);
+        this.textSearch = this.textSearch.bind(this);
+        this.tagSearch = this.tagSearch.bind(this);
     }
 
     getAllNews(req, res, next) {
@@ -40,6 +42,40 @@ class ApiController {
     getAllSymbols(req, res, next) {
         Models.symbols.find().then((symbols) => {
             res.send(this.responseFormat(symbols, false));
+        }).catch((err) => {
+            res.send(this.responseFormat(err, true));
+        });
+    }
+
+    textSearch(req, res, next) {
+        var search_text = req.query.search;
+        if (!search_text) {
+            res.send(this.responseFormat("Empty request", true));
+            return false;
+        }
+
+        Models.news.find({
+            $text: {
+                $search: search_text
+            }
+        }).then((news) => {
+            res.send(this.responseFormat(news, false));
+        }).catch((err) => {
+            res.send(this.responseFormat(err, true));
+        });
+    }
+
+    tagSearch(req, res, next) {
+        var search_tag = req.query.search;
+        if (!search_tag) {
+            res.send(this.responseFormat("Empty request", true));
+            return false;
+        }
+
+        Models.news.find({
+            tags: search_tag
+        }).then((news) => {
+            res.send(this.responseFormat(news, false));
         }).catch((err) => {
             res.send(this.responseFormat(err, true));
         });

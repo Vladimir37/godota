@@ -24,7 +24,7 @@ block content
     form(action="/news/edit/" + news._id method="POST")
         input(type="text" name="title" placeholder="Название" value=news.title required).form-control
         br
-        textarea(name="text" placeholder="Полный текст").form-control.news-text#news-text=news.text
+        textarea(name="text" placeholder="Полный текст").form-control.news-text#news-text=news.body
         button.btn.btn-primary.btn-xs#divider Разделитель
         button.btn.btn-primary.btn-xs#symbols Символы
         br
