@@ -3,19 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <!-- Подключение jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.0.slim.min.js"></script>
+
     <!-- Подключение socket.io библиотеки -->
     <script src="socket.io.js"></script>
 
-    <!-- Обработка событий -->
     <script>
-    var socket = io.connect('http://localhost:8080/');
-    socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', { my: 'data' });
-    });
+        // Подключение к серверу
+        var socket = io.connect('http://localhost:8080/');
+
+        // Обработка событий
+        socket.on('connect', function (data) {
+            // Подключился новый юзер. Вывести в консоль его имя.
+            socket.on('new_user', function (data) {
+                console.log(data.name);
+            });
+
+            // В чат отправлено новое сообщение
+            socket.on('message', function (data) {
+                console.log(data);
+            });
+
+            // Отправка сообщения
+            $(document).on('click', '#send', function() {
+                socket.emit('send', {
+                    message: $('#mess').val()
+                });
+                
+                $('#mess').val('');
+            });
+        });
     </script>
 </head>
 <body>
-    //
+    <textarea id="mess" placeholder="Text"></textarea>
+    <br>
+    <button id="send">Send message</button>
 </body>
 </html>

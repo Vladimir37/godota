@@ -56,7 +56,7 @@ app.use('/', router);
 app.use(error.notFound);
 app.use(error.renderError);
 
-// chat
+// Chat
 app = chat(app);
 
 module.exports = app;
