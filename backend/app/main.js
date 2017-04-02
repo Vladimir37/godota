@@ -4,13 +4,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var favicon = require('serve-favicon');
+var cors = require('cors');
 
 var config = require('../config.json');
 var error = require('./controllers/error');
 var middlewares = require('./controllers/middlewares');
 var router = require('./router/index');
+var chat = require('./chat/router');
 
 var app = express();
+
+// Cors enabling
+app.use(cors());
 
 // Passport.js auth
 app.use(session({
@@ -47,8 +52,11 @@ app.use('/src', express.static(__dirname + '/client/source'));
 // Router
 app.use('/', router);
 
-//Errors
+// Errors
 app.use(error.notFound);
 app.use(error.renderError);
+
+// chat
+app = chat(app);
 
 module.exports = app;
