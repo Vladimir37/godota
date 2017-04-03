@@ -9,7 +9,6 @@ class ChatHandlers {
 
         this.connection = this.connection.bind(this);
         this.send = this.send.bind(this);
-        this.message = this.message.bind(this);
         this.nameGenerator = this.nameGenerator.bind(this);
         this.handle = this.handle.bind(this);
     }
@@ -33,10 +32,6 @@ class ChatHandlers {
             name: this.names[ip],
             message: data.message
         });
-    }
-
-    message(socket) {
-        console.log('');
     }
 
     // Private

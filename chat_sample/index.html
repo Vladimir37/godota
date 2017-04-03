@@ -15,28 +15,40 @@
 
         // Обработка событий
         socket.on('connect', function (data) {
-            // Подключился новый юзер. Вывести в консоль его имя.
+            // Подключился новый юзер. Вывести его имя data.name
             socket.on('new_user', function (data) {
                 console.log(data.name);
+                // На страницу
+                var block = '<div>Присоединился новый юзер <b>' + data.name + '</b></div>';
+                $(block).appendTo('#chat-block');
             });
 
             // В чат отправлено новое сообщение
             socket.on('message', function (data) {
                 console.log(data);
+                // На страницу
+                var block = '<div><b>' + data.name + '</b>: ' + data.message + '</div>';
+                $(block).appendTo('#chat-block');
             });
 
             // Отправка сообщения
             $(document).on('click', '#send', function() {
-                socket.emit('send', {
-                    message: $('#mess').val()
-                });
-                
+                // Cчитать и очистить текст сообщения
+                var text = $('#mess').val();
                 $('#mess').val('');
+
+                // Отправка
+                socket.emit('send', {
+                    message: text
+                });
             });
         });
     </script>
 </head>
 <body>
+    <div id="chat-block" style="width: 400px; height: 500px; border: 1px solid black; overflow-y: scroll; padding: 5px;">
+    </div>
+    <br>
     <textarea id="mess" placeholder="Text"></textarea>
     <br>
     <button id="send">Send message</button>
