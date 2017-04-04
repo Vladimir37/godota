@@ -5,9 +5,12 @@ var config = require('../config_test');
 
 var server;
 
-function start() {
+function start(done) {
     server = fork('server/start_server.js');
-    // exec('node ../utility/new_user.js User Pass testing');
+    exec('node ../utility/new_user.js User Pass testing');
+    setTimeout(() => {
+        done();
+    }, 3000);
 }
 
 function stop() {

@@ -14,7 +14,9 @@ class ErrorController {
     }
 
     renderError(err, req, res, next) {
-        console.log(err);
+        if (err.status != 404) {
+            console.log(err);
+        }
         res.status(err.status || 500);
         var err_num = err.status || 500;
         res.render('errors/e' + err_num);

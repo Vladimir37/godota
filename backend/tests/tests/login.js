@@ -13,7 +13,6 @@ function login() {
         }).on('complete', (data, response) => {
             var path = 'http://localhost:' + config.app_port + '/auth/check';
             restler.get(path).on('complete', (data) => {
-                console.log(data);
                 resolve(data);
             });
         });
