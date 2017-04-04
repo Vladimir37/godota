@@ -3,9 +3,13 @@ var md5 = require('md5');
 
 var Models = require('../app/models/main');
 
+var config = require('../config');
+var config_test = require('../config_test');
+
 function creating() {
     var login = process.argv[2];
     var pass = process.argv[3];
+    var testing = process.argv[4];
 
     if (!login || !pass) {
         console.log('----------------------------------------------');
@@ -17,9 +21,25 @@ function creating() {
         return false;
     }
 
-    Models.admin.create({
-        login,
-        pass: md5(pass)
+    if (testing == 'testing') {
+        Models.connectDB(config_test.db_port, config_test.database);
+    } else {
+        Models.connectDB(config.db_port, config.database);
+    }
+
+    Models.admin.findOne({
+        login
+    }).then(function(user) {
+        if (user) {
+            console.log('----------------------------------------------');
+            console.log('The user with this login already exists');
+            console.log('----------------------------------------------');
+            process.exit(2);
+        }
+        return Models.admin.create({
+            login,
+            pass: md5(pass)
+        });
     }).then(function() {
         console.log('User was created!');
         process.exit(0);

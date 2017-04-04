@@ -20,14 +20,17 @@ connection.on('error', function(err) {
     process.exit(1);
 });
 
-mongoose.connect('mongodb://localhost:' + config.db_port + '/' + config.database);
+function connectDB(port, database) {
+    mongoose.connect('mongodb://localhost:' + port + '/' + database);
+}
 
 var models = {
     twitch,
     youtube,
     admin,
     news,
-    symbols
+    symbols,
+    connectDB
 };
 
 module.exports = models;

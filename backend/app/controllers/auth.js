@@ -24,6 +24,12 @@ class AuthController {
         })(req, res, next);
     }
 
+    check(req, res, next) {
+        res.status(200).json({
+            logged: req.user ? true : false
+        });
+    }
+
     logout(req, res, next) {
         req.logout();
         return res.redirect('/login');
