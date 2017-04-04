@@ -21,7 +21,10 @@ connection.on('error', function(err) {
 });
 
 function connectDB(port, database) {
-    mongoose.connect('mongodb://localhost:' + port + '/' + database);
+    return mongoose.connect('mongodb://localhost:' + port + '/' + database);
+}
+function disconnectDB(port, database) {
+    mongoose.connection.close();
 }
 
 var models = {
@@ -30,7 +33,8 @@ var models = {
     admin,
     news,
     symbols,
-    connectDB
+    connectDB,
+    disconnectDB
 };
 
 module.exports = models;
