@@ -1,13 +1,16 @@
-var actions = require('./actions');
+var assert = require('assert');
+
+// var actions = require('./actions');
 var login = require('./tests/login');
 
-beforeAll(actions.start);
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
 
-afterAll(actions.stop);
+// before(actions.start);
 
-test('Login', () => {
-    // expect(4).toBe(4);
-    login().then((data) => {
-        expect(4).toBe(4);
+// afterAll(actions.stop);
+
+it('Login', () => {
+    return login().then((data) => {
+        assert.equal(data, true);
     })
 });

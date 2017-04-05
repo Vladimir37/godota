@@ -15,42 +15,42 @@ class ApiController {
     getAllNews(req, res, next) {
         Models.news.find().then((news) => {
             news.reverse();
-            res.send(this.responseFormat(news, false));
+            res.json(this.responseFormat(news, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
     getAllYoutube(req, res, next) {
         Models.youtube.find().then((channels) => {
             channels.reverse();
-            res.send(this.responseFormat(channels, false));
+            res.json(this.responseFormat(channels, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
     getAllTwitch(req, res, next) {
         Models.twitch.find().then((channels) => {
             channels.reverse();
-            res.send(this.responseFormat(channels, false));
+            res.json(this.responseFormat(channels, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
     getAllSymbols(req, res, next) {
         Models.symbols.find().then((symbols) => {
-            res.send(this.responseFormat(symbols, false));
+            res.json(this.responseFormat(symbols, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
     textSearch(req, res, next) {
         var search_text = req.query.search;
         if (!search_text) {
-            res.send(this.responseFormat("Empty request", true));
+            res.json(this.responseFormat("Empty request", true));
             return false;
         }
 
@@ -59,25 +59,25 @@ class ApiController {
                 $search: search_text
             }
         }).then((news) => {
-            res.send(this.responseFormat(news, false));
+            res.json(this.responseFormat(news, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
     tagSearch(req, res, next) {
         var search_tag = req.query.search;
         if (!search_tag) {
-            res.send(this.responseFormat("Empty request", true));
+            res.json(this.responseFormat("Empty request", true));
             return false;
         }
 
         Models.news.find({
             tags: search_tag
         }).then((news) => {
-            res.send(this.responseFormat(news, false));
+            res.json(this.responseFormat(news, false));
         }).catch((err) => {
-            res.send(this.responseFormat(err, true));
+            res.json(this.responseFormat(err, true));
         });
     }
 
@@ -86,7 +86,7 @@ class ApiController {
             error,
             data
         };
-        return JSON.stringify(response);
+        return response;
     }
 }
 

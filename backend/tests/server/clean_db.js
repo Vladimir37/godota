@@ -7,7 +7,7 @@ function cleanDB() {
     db.connectDB(config.db_port, config.database).then(() => {
         var actions = [db.admin.remove()];
         return Promise.all(actions);
-    }).then((qw) => {
+    }).then(() => {
         console.log('Database was cleaned');
         db.disconnectDB();
         process.exit(0);

@@ -7,6 +7,10 @@ var favicon = require('serve-favicon');
 var cors = require('cors');
 
 var config = require('../config.json');
+var config_test = require('../config_test.json');
+
+var db = require('./models/main');
+
 var error = require('./controllers/error');
 var middlewares = require('./controllers/middlewares');
 var router = require('./router/index');
@@ -56,7 +60,18 @@ app.use('/', router);
 app.use(error.notFound);
 app.use(error.renderError);
 
-// Chat
-app = chat(app);
+function connectToDB(testing) {
+    var desc;
+    if (testing) {
+        desc = db.connectDB(config_test.db_port, config_test.database);
+        app.set('mongodb', desc);
+    } else {
+        desc = db.connectDB(config.db_port, config.database);     
+        app.set('mongodb', desc);
+        // Chat
+        app = chat(app);
+    }
+    return app;
+}
 
-module.exports = app;
+module.exports = connectToDB;
