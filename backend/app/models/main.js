@@ -23,7 +23,7 @@ connection.on('error', function(err) {
 function connectDB(port, database) {
     return mongoose.connect('mongodb://localhost:' + port + '/' + database);
 }
-function disconnectDB(port, database) {
+function disconnectDB() {
     mongoose.connection.close();
 }
 

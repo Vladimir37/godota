@@ -1,14 +1,13 @@
 'use strict';
 
 const gulp = require('gulp');
-var exec = require('gulp-exec');
+var exec = require('gulp-spawn');
 var mocha = require('gulp-mocha');
-var request = require('request');
-var spawn = require('child_process').spawn;
+
+var new_user = require('./utility/new_user');
 
 gulp.task('tests', () => {
-    return exec('node utility/new_user.js UserUser PassPass testing')
-        .pipe(gulp.src('tests/test.js'))
-        .pipe(mocha())
-        .pipe(exec('node tests/server/clean_db.js'))
+    new_user('UserUser', 'PassPass');
+    return gulp.src('tests/test.js')
+        .pipe(mocha());
 });

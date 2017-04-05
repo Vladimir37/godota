@@ -1,21 +1,17 @@
 var process = require('process');
 
 var db = require('../../app/models/main');
-var config = require('../../config_test');
 
-function cleanDB() {
-    db.connectDB(config.db_port, config.database).then(() => {
-        var actions = [db.admin.remove()];
-        return Promise.all(actions);
-    }).then(() => {
+function cleanDB(done) {
+    var actions = [db.admin.remove()];
+    Promise.all(actions).then(() => {
         console.log('Database was cleaned');
         db.disconnectDB();
-        process.exit(0);
+        done();
     }).catch((err) => {
         console.log('Error:' + err);
         db.disconnectDB();
-        process.exit(1);
     });
 }
 
-cleanDB();
+module.exports = cleanDB;

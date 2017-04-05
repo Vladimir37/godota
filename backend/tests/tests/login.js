@@ -16,14 +16,10 @@ function login(app) {
                         password: 'PassPass'
                     })
                     .end((err, res) => {
-                        console.log('------------------------------');
-                        console.log(res.req);
-                        console.log('------------------------------');
                         agent
                             .get('/auth/check')
                             .set('Cookie', cookie)
                             .end((err, res) => {
-                                // console.log(cookie);
                                 resolve(res.body.logged);
                             });
                     });

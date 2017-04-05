@@ -6,10 +6,10 @@ var Models = require('../app/models/main');
 var config = require('../config');
 var config_test = require('../config_test');
 
-function creating() {
-    var login = process.argv[2];
-    var pass = process.argv[3];
-    var testing = process.argv[4];
+function creating(log, pas) {
+    var login = log || process.argv[2];
+    var pass = pas || process.argv[3];
+    var testing = log || pas;
 
     if (!login || !pass) {
         console.log('----------------------------------------------');
@@ -21,7 +21,7 @@ function creating() {
         return false;
     }
 
-    if (testing == 'testing') {
+    if (testing) {
         Models.connectDB(config_test.db_port, config_test.database);
     } else {
         Models.connectDB(config.db_port, config.database);
@@ -42,7 +42,10 @@ function creating() {
         });
     }).then(function() {
         console.log('User was created!');
-        process.exit(0);
+        Models.disconnectDB();
+        if (!testing) {
+            process.exit(0);
+        }
     }).catch(function(err) {
         console.log('----------------------------------------------');
         console.log('Database error:');
@@ -52,4 +55,8 @@ function creating() {
     });
 }
 
-creating();
+if (require.main === module) {
+    creating();
+} else {
+    module.exports = creating;
+}
