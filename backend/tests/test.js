@@ -1,16 +1,20 @@
-var assert = require('assert');
+var expect = require('chai').expect;
 
-// var actions = require('./actions');
+var start = require('../app/main');
+
+var connect = require('./tests/connect');
 var login = require('./tests/login');
 
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
+var app = start(true);
 
-// before(actions.start);
-
-// afterAll(actions.stop);
+it('Connect', () => {
+    return connect(app).then((data) => {
+        expect(data).to.be.false;
+    })
+});
 
 it('Login', () => {
-    return login().then((data) => {
-        assert.equal(data, true);
+    return login(app).then((data) => {
+        expect(data).to.be.true;
     })
 });
