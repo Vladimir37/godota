@@ -5,6 +5,7 @@ var start = require('../app/main');
 var connect = require('./tests/connect');
 var login = require('./tests/login');
 var twitch = require('./tests/twitch');
+var youtube = require('./tests/youtube');
 var news = require('./tests/news');
 
 var clean_db = require('./server/clean_db');
@@ -59,6 +60,45 @@ describe('Twitch', () => {
 
     it('Deleting', () => {
         return twitch.deleteTwitch(app, session).then((data) => {
+            expect(data.error).to.be.false;
+            expect(data.data).to.be.empty;
+        });
+    });
+});
+
+describe('Youtube', () => {
+    it('Get Youtube', () => {
+        return youtube.getYoutube(app).then((data) => {
+            expect(data.error).to.be.false;
+            expect(data.data).to.be.instanceof(Array);
+            expect(data.data).to.be.empty;
+        });
+    });
+
+    it('Creating', () => {
+        return youtube.createYoutube(app, session).then((data) => {
+            var target_news = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.id).to.be.equal('test');
+            expect(target_news.name).to.be.equal('TestCommand');
+            expect(target_news.title).to.be.equal('FirstTitle');
+        });
+    });
+
+    it('Edining', () => {
+        return youtube.editYoutube(app, session).then((data) => {
+            var target_news = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.id).to.be.equal('test_updated');
+            expect(target_news.name).to.be.equal('TestCommandNew');
+            expect(target_news.title).to.be.equal('SecondTitle');
+        });
+    });
+
+    it('Deleting', () => {
+        return youtube.deleteYoutube(app, session).then((data) => {
             expect(data.error).to.be.false;
             expect(data.data).to.be.empty;
         });
