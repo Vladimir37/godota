@@ -10,7 +10,8 @@ class NewsController {
     constructor() {
         this.imagePath = '/app/client/source/img/main_images/';
         this.galleryPath = '/app/client/source/img/gallery/';
-        this.appDir = path.dirname(require.main.filename);
+        // this.appDir = path.dirname(require.main.filename);
+        this.appDir = path.join(__dirname, '../../');
 
         this.addAction = this.addAction.bind(this);
         this.changeMainImage = this.changeMainImage.bind(this);
