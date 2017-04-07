@@ -141,6 +141,29 @@ describe('News', () => {
             expect(file(path + 'gallery/' + target_news.galleryList[0])).to.exist;
         });
     });
+
+    it('Editing content', () => {
+        return news.editContentNews(app, session).then((data) => {
+            var target_news = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.title).to.be.equal('New test news');
+            expect(target_news.body).to.be.equal('NewTextNewText');
+            expect(target_news.tags).to.be.instanceof(Array);
+            expect(target_news.tags).to.include('four');
+            expect(target_news.tags).to.include('five');
+            expect(target_news.tags.length).to.be.equal(3);
+        });
+    });
+
+    it('Delete main image', () => {
+        return news.deleteMainImageNews(app, session).then((data) => {
+            var target_news = data.response.data[0];
+            expect(data.response.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.mainImage).to.not.exist;
+        });
+    });
 });
 
 after(clean_db)

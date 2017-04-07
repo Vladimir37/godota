@@ -146,7 +146,11 @@ class NewsController {
         Models.news.findOne({
             _id: req.params.num
         }).then((target_news) => {
-            fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+            fs.unlink(this.appDir + this.imagePath + target_news.mainImage, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
             target_news.mainImage = null;
             return target_news.save();
         }).then(() => {
