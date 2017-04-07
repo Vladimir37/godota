@@ -16,6 +16,7 @@ class NewsController {
         this.changeMainImage = this.changeMainImage.bind(this);
         this.deleteMainImage = this.deleteMainImage.bind(this);
         this.addGalleryImage = this.addGalleryImage.bind(this);
+        this.deleteAction = this.deleteAction.bind(this);
         this.deleteGalleryImage = this.deleteGalleryImage.bind(this);
 
         this.fileProcessing = this.fileProcessing.bind(this);
@@ -118,11 +119,24 @@ class NewsController {
     }
 
     deleteAction(req, res, next) {
-        Models.news.findOneAndRemove({
+        Models.news.findOne({
             _id: req.params.num
+        }).then((target_news) => {
+            if (target_news.mainImage) {
+                fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+            }
+            if (target_news.galleryExist) {
+                target_news.galleryList.forEach((img) => {
+                    fs.unlink(this.appDir + this.galleryPath + img);
+                });
+            }
+            return Models.news.findOneAndRemove({
+                _id: req.params.num
+            });
         }).then(() => {
             res.redirect('/news/');
         }).catch((err) => {
+            console.log(err);
             res.redirect('/news/?err=500');
         });
     }

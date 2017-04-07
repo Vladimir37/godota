@@ -11,7 +11,13 @@ function getNews(app) {
 }
 
 function createNews(app, session) {
-    //
+    return new Promise((resolve, reject) => {
+        supertest(app)
+            .post('/news/add')
+            .send({
+                title: 'Test news'
+            })
+    });
 }
 
 exports.getNews = getNews;
