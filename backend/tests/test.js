@@ -197,11 +197,54 @@ describe('News', () => {
             expect(target_news).to.exist;
             expect(target_news.galleryExist).to.be.false;
             expect(target_news.galleryList).to.be.instanceof(Array);
-            expect(target_news.galleryList.length).to.be.equal(0);
+            expect(target_news.galleryList).to.be.empty;
 
             var path = 'app/client/source/img/';
             expect(file(path + 'gallery/' + data.image)).to.not.exist;
-        })
+        });
+    });
+
+    it('Creating gallery image', () => {
+        return news.uploadGalleryImageNews(app, session).then((data) => {
+            var target_news = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.galleryExist).to.be.true;
+            expect(target_news.galleryList).to.be.instanceof(Array);
+            expect(target_news.galleryList.length).to.be.equal(1);
+
+            var path = 'app/client/source/img/';
+            expect(file(path + 'gallery/' + target_news.galleryList[0])).to.exist;
+        });
+    });
+
+    it('Upload image to gallery', () => {
+        return news.uploadGalleryImageNews(app, session).then((data) => {
+            var target_news = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.galleryExist).to.be.true;
+            expect(target_news.galleryList).to.be.instanceof(Array);
+            expect(target_news.galleryList.length).to.be.equal(2);
+            expect(target_news.galleryList[0]).to.not.be.equal(target_news.galleryList[1]);
+            expect(target_news.galleryList[0]).to.be.ok;
+            expect(target_news.galleryList[1]).to.be.ok;
+        });
+    });
+
+    it('Delete news', () => {
+        return news.deleteNews(app, session).then((data) => {
+            // console.log(data.response.data);
+            expect(data.response.error).to.be.false;
+            expect(data.response.data).to.be.instanceof(Array);
+            expect(data.response.data).to.be.empty;
+
+            var path = 'app/client/source/img/';
+            var target_news = data.news;
+            expect(file(path + 'gallery/' + target_news.galleryList[0])).to.not.exist;
+            expect(file(path + 'gallery/' + target_news.galleryList[2])).to.not.exist;
+            expect(file(path + 'main_images/' + target_news.mainImage)).to.not.exist;
+        });
     });
 });
 

@@ -124,11 +124,19 @@ class NewsController {
             _id: req.params.num
         }).then((target_news) => {
             if (target_news.mainImage) {
-                fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+                fs.unlink(this.appDir + this.imagePath + target_news.mainImage, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
             }
             if (target_news.galleryExist) {
                 target_news.galleryList.forEach((img) => {
-                    fs.unlink(this.appDir + this.galleryPath + img);
+                    fs.unlink(this.appDir + this.galleryPath + img, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
                 });
             }
             return Models.news.findOneAndRemove({

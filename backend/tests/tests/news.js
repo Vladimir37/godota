@@ -132,9 +132,57 @@ function deleteGalleryImageNews(app, session) {
     });
 }
 
+function uploadGalleryImageNews(app, session) {
+    return new Promise((resolve, reject) => {
+        supertest(app)
+            .get('/api/all_news')
+            .then((res) => {
+                var target_news = res.body.data[0];
+                return supertest(app)
+                    .post('/news/gallery_add/' + target_news._id)
+                    .set('Cookie', session)
+                    .attach('gallery_0', __dirname + '/../imgs/img4.png')
+            })
+            .then((res) => {
+                return supertest(app)
+                    .get('/api/all_news');
+            })
+            .then((res) => {
+                resolve(res.body);
+            });
+    });
+}
+
+function deleteNews(app, session) {
+    return new Promise((resolve, reject) => {
+        var target_news;
+        supertest(app)
+            .get('/api/all_news')
+            .then((res) => {
+                target_news = res.body.data[0];
+                return supertest(app)
+                    .get('/news/delete/' + target_news._id)
+                    .set('Cookie', session)
+            })
+            .then((res) => {
+                return supertest(app)
+                    .get('/api/all_news');
+            })
+            .then((res) => {
+                var result = {
+                    news: target_news,
+                    response: res.body
+                }
+                resolve(result);
+            });
+    });
+}
+
 exports.getNews = getNews;
 exports.createNews = createNews;
 exports.editContentNews = editContentNews;
 exports.deleteMainImageNews = deleteMainImageNews;
 exports.changeMainImageNews = changeMainImageNews;
 exports.deleteGalleryImageNews = deleteGalleryImageNews;
+exports.uploadGalleryImageNews = uploadGalleryImageNews;
+exports.deleteNews = deleteNews;
