@@ -178,7 +178,11 @@ class NewsController {
                 });
             }).then((target_news) => {
                 if (target_news.mainImage) {
-                    fs.unlink(this.appDir + this.imagePath + target_news.mainImage);
+                    fs.unlink(this.appDir + this.imagePath + target_news.mainImage, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
                 }
                 target_news.mainImage = mainFileName;
                 return target_news.save();
@@ -200,7 +204,11 @@ class NewsController {
             if (target_news.galleryList.indexOf(img) == -1) {
                 throw "Image not found";
             }
-            fs.unlink(this.appDir + this.galleryPath + img);
+            fs.unlink(this.appDir + this.galleryPath + img, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
             target_news.galleryList.splice(target_news.galleryList.indexOf(img), 1);
             if (!target_news.galleryList.length) {
                 target_news.galleryExist = false;
@@ -259,7 +267,7 @@ class NewsController {
                 reject('Incorrect file');
             }
 
-            var newFileName = ((new Date()).getTime() / 1000).toFixed(0) + '.' + fileNameArr[1];
+            var newFileName = ((new Date()).getTime()).toFixed(0) + '.' + fileNameArr[1];
 
             fs.rename(file.path, this.appDir + this.imagePath + newFileName, function(err) {
                 if (err) {
@@ -289,7 +297,7 @@ class NewsController {
                     resolve('');
                 }
 
-                var newFileName = (((new Date()).getTime() / 1000).toFixed(0) + '_' + currentNum) + '.' + fileNameArr[1];
+                var newFileName = (((new Date()).getTime()).toFixed(0) + '_' + currentNum) + '.' + fileNameArr[1];
                 currentNum++;
 
                 fs.rename(file.path, this.appDir + this.galleryPath + newFileName, function(err) {

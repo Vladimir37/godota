@@ -164,6 +164,45 @@ describe('News', () => {
             expect(target_news.mainImage).to.not.exist;
         });
     });
+
+    it('Upload main image', () => {
+        return news.changeMainImageNews(app, session, 3).then((data) => {
+            var target_news = data.response.data[0];
+            expect(data.response.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.mainImage).to.exist;
+
+            var path = 'app/client/source/img/';
+            expect(file(path + 'main_images/' + target_news.mainImage)).to.exist;
+        });
+    });
+
+    it('Replace main image', () => {
+        return news.changeMainImageNews(app, session, 4).then((data) => {
+            var target_news = data.response.data[0];
+            expect(data.response.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.mainImage).to.exist;
+
+            var path = 'app/client/source/img/';
+            expect(file(path + 'main_images/' + target_news.mainImage)).to.exist;
+            expect(file(path + 'main_images/' + data.image)).to.not.exist;
+        });
+    });
+
+    it('Delete gallery image', () => {
+        return news.deleteGalleryImageNews(app, session).then((data) => {
+            var target_news = data.response.data[0];
+            expect(data.response.error).to.be.false;
+            expect(target_news).to.exist;
+            expect(target_news.galleryExist).to.be.false;
+            expect(target_news.galleryList).to.be.instanceof(Array);
+            expect(target_news.galleryList.length).to.be.equal(0);
+
+            var path = 'app/client/source/img/';
+            expect(file(path + 'gallery/' + data.image)).to.not.exist;
+        })
+    });
 });
 
 after(clean_db)
