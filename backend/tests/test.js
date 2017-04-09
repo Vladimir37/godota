@@ -4,7 +4,7 @@ var chaiFiles = require('chai-files');
 var start = require('../app/main');
 
 var connect = require('./tests/connect');
-var login = require('./tests/login');
+var auth = require('./tests/login');
 var twitch = require('./tests/twitch');
 var youtube = require('./tests/youtube');
 var news = require('./tests/news');
@@ -30,7 +30,7 @@ it('Connect', () => {
 });
 
 it('Login', () => {
-    return login(app).then((data) => {
+    return auth.login(app).then((data) => {
         session = data.session;
         expect(data.logged).to.be.true;
     })
@@ -284,6 +284,15 @@ describe('Symbols', () => {
             expect(data.response.data).to.be.instanceof(Array);
             expect(data.response.data).to.be.empty;
             expect(file(path + 'symbols/' + data.image)).to.not.exist;
+        });
+    });
+});
+
+describe('Logout', () => {
+    it('Logout', () => {
+        return auth.logout(app, session).then((data) => {
+            expect(data.first).to.be.true;
+            expect(data.second).to.be.false;        
         });
     });
 });
