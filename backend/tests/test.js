@@ -8,6 +8,7 @@ var login = require('./tests/login');
 var twitch = require('./tests/twitch');
 var youtube = require('./tests/youtube');
 var news = require('./tests/news');
+var symbols = require('./tests/symbols');
 
 var clean_db = require('./server/clean_db');
 
@@ -19,6 +20,8 @@ var expect = chai.expect;
 var file = chaiFiles.file;
 
 var session;
+
+var path = 'app/client/source/img/';
 
 it('Connect', () => {
     return connect(app).then((data) => {
@@ -135,8 +138,6 @@ describe('News', () => {
             expect(target_news.galleryExist).to.exist;
             expect(target_news.galleryList).to.be.instanceof(Array);
             expect(target_news.galleryList.length).to.be.equal(1);
-
-            var path = 'app/client/source/img/';
             expect(file(path + 'main_images/' + target_news.mainImage)).to.exist;
             expect(file(path + 'gallery/' + target_news.galleryList[0])).to.exist;
         });
@@ -171,8 +172,6 @@ describe('News', () => {
             expect(data.response.error).to.be.false;
             expect(target_news).to.exist;
             expect(target_news.mainImage).to.exist;
-
-            var path = 'app/client/source/img/';
             expect(file(path + 'main_images/' + target_news.mainImage)).to.exist;
         });
     });
@@ -183,8 +182,6 @@ describe('News', () => {
             expect(data.response.error).to.be.false;
             expect(target_news).to.exist;
             expect(target_news.mainImage).to.exist;
-
-            var path = 'app/client/source/img/';
             expect(file(path + 'main_images/' + target_news.mainImage)).to.exist;
             expect(file(path + 'main_images/' + data.image)).to.not.exist;
         });
@@ -198,8 +195,6 @@ describe('News', () => {
             expect(target_news.galleryExist).to.be.false;
             expect(target_news.galleryList).to.be.instanceof(Array);
             expect(target_news.galleryList).to.be.empty;
-
-            var path = 'app/client/source/img/';
             expect(file(path + 'gallery/' + data.image)).to.not.exist;
         });
     });
@@ -212,8 +207,6 @@ describe('News', () => {
             expect(target_news.galleryExist).to.be.true;
             expect(target_news.galleryList).to.be.instanceof(Array);
             expect(target_news.galleryList.length).to.be.equal(1);
-
-            var path = 'app/client/source/img/';
             expect(file(path + 'gallery/' + target_news.galleryList[0])).to.exist;
         });
     });
@@ -239,11 +232,58 @@ describe('News', () => {
             expect(data.response.data).to.be.instanceof(Array);
             expect(data.response.data).to.be.empty;
 
-            var path = 'app/client/source/img/';
             var target_news = data.news;
             expect(file(path + 'gallery/' + target_news.galleryList[0])).to.not.exist;
             expect(file(path + 'gallery/' + target_news.galleryList[2])).to.not.exist;
             expect(file(path + 'main_images/' + target_news.mainImage)).to.not.exist;
+        });
+    });
+});
+
+describe('Symbols', () => {
+    it('Get symbols', () => {
+        return symbols.getSymbols(app).then((data) => {
+            expect(data.error).to.be.false;
+            expect(data.data).to.be.instanceof(Array);
+            expect(data.data).to.be.empty;
+        });
+    });
+    
+    it('Creating', () => {
+        return symbols.createSymbols(app, session).then((data) => {
+            var target_symbol = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_symbol).to.exist;
+            expect(target_symbol.name).to.be.equal('testsym');
+            expect(file(path + 'symbols/' + target_symbol.file)).to.exist;
+        });
+    });
+
+    it('Name editing', () => {
+        return symbols.editNameSymbols(app, session).then((data) => {
+            var target_symbol = data.data[0];
+            expect(data.error).to.be.false;
+            expect(target_symbol).to.exist;
+            expect(target_symbol.name).to.be.equal('newsymname');
+        });
+    });
+
+    it('File editing', () => {
+        return symbols.editFileSymbols(app, session).then((data) => {
+            var target_symbol = data.response.data[0];
+            expect(data.response.error).to.be.false;
+            expect(target_symbol).to.exist;
+            expect(file(path + 'symbols/' + target_symbol.file)).to.exist;
+            expect(file(path + 'symbols/' + data.image)).to.not.exist;
+        });
+    });
+
+    it('Deleting', () => {
+        return symbols.deleteSymbols(app, session).then((data) => {
+            expect(data.response.error).to.be.false;
+            expect(data.response.data).to.be.instanceof(Array);
+            expect(data.response.data).to.be.empty;
+            expect(file(path + 'symbols/' + data.image)).to.not.exist;
         });
     });
 });

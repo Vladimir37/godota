@@ -9,7 +9,7 @@ var Models = require('../models/main');
 class SymbolsController {
     constructor() {
         this.symbolsPath = '/app/client/source/img/symbols/';
-        this.appDir = path.dirname(require.main.filename);
+        this.appDir = path.join(__dirname, '../../');
         
         this.addAction = this.addAction.bind(this);        
         this.editNameAction = this.editNameAction.bind(this);        
@@ -97,7 +97,11 @@ class SymbolsController {
                 newFileName = name;
                 return Models.symbols.findById(num);
             }).then((target_symbol) => {
-                fs.unlink(this.appDir + this.symbolsPath + target_symbol.file);
+                fs.unlink(this.appDir + this.symbolsPath + target_symbol.file, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
                 target_symbol.file = newFileName;
                 return target_symbol.save();
             }).then(() => {
@@ -111,7 +115,11 @@ class SymbolsController {
 
     deleteAction(req, res, next) {
         Models.symbols.findById(req.params.num).then((target_symbol) => {
-            fs.unlink(this.appDir + this.symbolsPath + target_symbol.file);
+            fs.unlink(this.appDir + this.symbolsPath + target_symbol.file, function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
             return target_symbol.remove();
         }).then(() => {
             res.redirect('/symbols/');
